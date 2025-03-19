@@ -33,7 +33,7 @@ GEMINI_API_KEY=xxxxxxxxxxxxxx
 ```bash
 python tutor_agent.py
 ```
-![Tutor output ](smart_tutor/assets/final tutor1.png)
+![Tutor output ](assets/final tutor1.png)
 
 ### 2️⃣ Start the Student Agent
 ```bash
