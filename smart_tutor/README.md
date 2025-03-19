@@ -63,7 +63,7 @@ The tutor fetches answers using Google's Gemini AI API and provides intelligent 
 
 
 
-Ensure both agents are running simultaneously for proper communication. ✅
+Both agents are running simultaneously for proper communication. ✅
 
 ## ⚙️ How It Works
 1. The **Student Agent** sends a question.
