@@ -12,17 +12,20 @@ async def send_dream(ctx: Context):
     dream_text = input("Describe your dream: ")
     print("Sending your dream to Dreamie...")
 
-    # Use Dreamie's actual address from the logs
-    dreamie_address = "PUT_DREAMIE_ADDRESS_HERE"  # Replace this with the actual address
+    dreamie_address = "agent1qtu6wt5jphhmdjau0hdhc002ashzjnueqe89gvvuln8mawm3m0xrwmn9a76"  # Replace with actual address from dream_agent.py logs
 
     success = await ctx.send(dreamie_address, Dream(description=dream_text))
     
-    if not success:
-        print("❌ Failed to send the dream. Make sure Dreamie is running!")
+    if success:
+        print("✅ Dream sent successfully!")
+    else:
+        print("❌ Failed to send the dream. Ensure Dreamie is running!")
 
 @user_agent.on_message(model=Dream)
 async def receive_interpretation(ctx: Context, sender: str, dream: Dream):
     print(f"\n🌙 Dreamie interprets: {dream.description}")
 
 if __name__ == "__main__":
+    print("Starting User Agent...")
     user_agent.run()
+
