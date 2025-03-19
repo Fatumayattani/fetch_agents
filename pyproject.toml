@@ -8,6 +8,8 @@ readme = "README.md"
 [tool.poetry.dependencies]
 python = "^3.12"
 uagents = "^0.21.0"
+openai = "^1.66.5"
+python-dotenv = "^1.0.1"
 
 
 [build-system]
