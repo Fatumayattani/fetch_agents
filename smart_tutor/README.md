@@ -11,8 +11,8 @@ Smart Tutor is an AI-powered tutoring system that enables seamless communication
 ## 🛠️ Installation
 ### 1️⃣ Clone the Repository
 ```bash
-git clone https://github.com/Fatumayattani/smart-tutor.git
-cd smart-tutor
+git clone https://github.com/Fatumayattani/fetch_agents.git
+cd fetch_agents/smart_tutor
 ```
 
 ### 2️⃣ Install Dependencies
