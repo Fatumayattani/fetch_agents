@@ -20,6 +20,7 @@ Ensure you have [Poetry](https://python-poetry.org/) installed, then run:
 ```bash
 poetry install
 ```
+This will automatically install all required dependencies, including `uagents`.
 
 ### 3️⃣ Set Up Environment Variables
 Create a `.env` file in the project root and add:
@@ -32,7 +33,7 @@ GEMINI_API_KEY=xxxxxxxxxxxxxx
 ```bash
 python tutor_agent.py
 ```
-![Tutor output ](fetch_agents/smart_tutor/assets/final tutor1.png)
+![Tutor output ](smart_tutor/assets/final tutor1.png)
 
 ### 2️⃣ Start the Student Agent
 ```bash
