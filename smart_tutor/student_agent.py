@@ -1,40 +1,32 @@
-import os
 from uagents import Agent, Context, Model
-from dotenv import load_dotenv
 
-# Load environment variables
-load_dotenv()
-
-# Define message model
-class TutorMessage(Model):
+# Define message models
+class Question(Model):
     text: str
 
-# Create Student Agent with seed, port, and endpoint
-student_agent = Agent(
-    name="StudentAgent",
-    seed="student_secret_seed",
-    port=8002,
-    endpoint=["http://127.0.0.1:8002/submit"]
-)
+class Answer(Model):
+    text: str
 
-# Replace with the actual Tutor Agent Address (Copy from tutor console)
-TUTOR_AGENT_ADDRESS = "agent1qt024pv43ckcpmvezps0maw7hqaexa5sakw5qh4xgwvwmpm0at0azpmdxqs"  
+# Initialize Student Agent
+student = Agent(name="Student", seed="student_secret_seed", port=8001, endpoint=["http://127.0.0.1:8001/submit"])
 
-@student_agent.on_event("startup")
-async def introduce_agent(ctx: Context):
-    ctx.logger.info(f"🎓 {student_agent.name} is online and ready to learn!")
-    ctx.logger.info(f"My address: {student_agent.address}")
+@student.on_event("startup")
+async def ask_question(ctx: Context):
+    question_text = input("Ask your question: ")
+    print("Sending your question to the Tutor...")
 
-    # Send an initial question
-    question = "What is the importance of learning Python?"
-    ctx.logger.info(f"💬 Sending question to Tutor: {question}")
-    await ctx.send(TUTOR_AGENT_ADDRESS, TutorMessage(text=question))
+    # Use Tutor's actual address (replace with real address from logs)
+    tutor_address = "agent1qt024pv43ckcpmvezps0maw7hqaexa5sakw5qh4xgwvwmpm0at0azpmdxqs"  
 
-@student_agent.on_message(model=TutorMessage)
-async def receive_response(ctx: Context, sender: str, msg: TutorMessage):
-    tutor_response = msg.text
-    ctx.logger.info(f"📖 Received response from Tutor: {tutor_response}")
-    print(f"Tutor: {tutor_response}")
+    success = await ctx.send(tutor_address, Question(text=question_text))
+    
+    if not success:
+        print("❌ Failed to send the question. Make sure Tutor is running!")
+
+@student.on_message(model=Answer)
+async def receive_answer(ctx: Context, sender: str, answer: Answer):
+    print(f"\n📚 Tutor says: {answer.text}")
 
 if __name__ == "__main__":
-    student_agent.run()
+    student.run()
+

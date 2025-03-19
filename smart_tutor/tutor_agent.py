@@ -1,12 +1,16 @@
-import openai
 import os
+import requests
+from dotenv import load_dotenv
 from uagents import Agent, Context, Model
 
-# Load OpenAI API key from environment variables
-OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
+# Load environment variables
+load_dotenv()
 
-# Initialize Tutor Agent
-tutor = Agent(name="Tutor", seed="tutor_secret_seed", port=8000, endpoint=["http://127.0.0.1:8000/submit"])
+# Get API Key
+GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
+
+# Initialize Smart Tutor Agent
+smart_tutor = Agent(name="Smart Tutor", seed="tutor_secret_seed", port=8000, endpoint=["http://127.0.0.1:8000/submit"])
 
 # Define a message model for student questions
 class Question(Model):
@@ -16,27 +20,37 @@ class Question(Model):
 class Answer(Model):
     text: str
 
-# Function to get response from OpenAI
-def get_gpt_answer(question):
-    response = openai.ChatCompletion.create(
-        model="gpt-3.5-turbo",
-        messages=[{"role": "system", "content": "You are a knowledgeable tutor."},
-                  {"role": "user", "content": question}]
-    )
-    return response["choices"][0]["message"]["content"]
+# Function to get response from Gemini API
+def fetch_gemini_answer(question):
+    url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key={GEMINI_API_KEY}"
+    headers = {"Content-Type": "application/json"}
+    payload = {
+        "contents": [{"parts": [{"text": question}]}]
+    }
+    
+    response = requests.post(url, headers=headers, json=payload)
+    
+    if response.status_code == 200:
+        try:
+            data = response.json()
+            return data["candidates"][0]["content"]["parts"][0]["text"]
+        except KeyError:
+            return "Sorry, I couldn't process your request."
+    else:
+        return f"Error {response.status_code}: {response.text}"
 
-@tutor.on_event("startup")
+@smart_tutor.on_event("startup")
 async def start_tutor(ctx: Context):
-    ctx.logger.info(f"Hello, I am {tutor.name}, your AI Tutor!")
-    ctx.logger.info(f"My address: {tutor.address}")
+    ctx.logger.info(f"Hello, I am {smart_tutor.name}, your AI Tutor!")
+    ctx.logger.info(f"My address: {smart_tutor.address}")
 
-@tutor.on_message(model=Question)
+@smart_tutor.on_message(model=Question)
 async def answer_question(ctx: Context, sender: str, question: Question):
     ctx.logger.info(f"Received question from {sender}: {question.text}")
-    answer_text = get_gpt_answer(question.text)
+    answer_text = fetch_gemini_answer(question.text)
 
     # Send back the answer
     await ctx.send(sender, Answer(text=answer_text))
 
 if __name__ == "__main__":
-    tutor.run()
+    smart_tutor.run()
