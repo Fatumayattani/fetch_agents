@@ -1,23 +1,27 @@
 import os
 import openai
-from uagents import Agent, Context, Message
+from uagents import Agent, Context
+from uagents.models import Model  
+from dotenv import load_dotenv
 
 # Load OpenAI API key from .env file
-from dotenv import load_dotenv
 load_dotenv()
-
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 
 # Initialize OpenAI API
 openai.api_key = OPENAI_API_KEY
 
+# Define a message model
+class TutorMessage(Model):
+    text: str
+
 # Create Tutor Agent
 tutor_agent = Agent(name="TutorAgent")
 
-@tutor_agent.on_message()
-async def handle_message(ctx: Context, msg: Message):
-    user_question = msg.body
-    
+@tutor_agent.on_message(model=TutorMessage)  # ✅ Specify message model
+async def handle_message(ctx: Context, msg: TutorMessage):
+    user_question = msg.text  # ✅ Use .text instead of .body
+
     ctx.logger.info(f"Received question: {user_question}")
 
     # Generate a response using OpenAI
@@ -30,7 +34,7 @@ async def handle_message(ctx: Context, msg: Message):
     tutor_response = response["choices"][0]["message"]["content"]
     
     # Send response back to the student
-    await ctx.send(msg.sender, tutor_response)
+    await ctx.send(msg.sender, TutorMessage(text=tutor_response))  # ✅ Send structured response
 
 # Run the Tutor Agent
 if __name__ == "__main__":
