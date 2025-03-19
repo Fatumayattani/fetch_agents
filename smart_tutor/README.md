@@ -45,6 +45,8 @@ When you run the student agent, you will be prompted with a question to enter.
 ![student output ](assets/student1.png)
 
 Type your query and press enter to receive a response from the tutor agent.
+Tutor will receive the question
+![student output ](assets/student2.png)
 Ensure both agents are running simultaneously for proper communication. ✅
 
 ## ⚙️ How It Works
