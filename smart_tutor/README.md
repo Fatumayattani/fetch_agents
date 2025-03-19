@@ -36,10 +36,15 @@ python tutor_agent.py
 ![Tutor output ](assets/tutor1.png)
 
 ### 2️⃣ Start the Student Agent
+Before running the student agent, make sure you copy-paste the agent address and replace it in the student agent.
 ```bash
 python student_agent.py
 ```
+When you run the student agent, you will be prompted with a question to enter.
 
+![student output ](assets/student1.png)
+
+Type your query and press enter to receive a response from the tutor agent.
 Ensure both agents are running simultaneously for proper communication. ✅
 
 ## ⚙️ How It Works
