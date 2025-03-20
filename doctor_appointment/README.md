@@ -1,9 +1,6 @@
-```markdown
 # Doctor Appointment System with Autonomous Agents
 
 A decentralized doctor appointment system built using the uAgents framework (Fetch.AI), enabling seamless communication between patient and doctor agents for appointment management.
-
-![System Overview](https://via.placeholder.com/800x400.png?text=Doctor+Appointment+System+Architecture)
 
 ## Features
 
@@ -26,8 +23,8 @@ A decentralized doctor appointment system built using the uAgents framework (Fet
 
 ```bash
 # Clone repository
-git clone https://github.com/yourusername/doctor-appointment-system.git
-cd doctor-appointment-system
+git clone https://github.com/Fatumayattani/fetch_agents.git
+cd doctor_appointment
 
 # Install dependencies
 poetry install
