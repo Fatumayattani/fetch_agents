@@ -54,15 +54,15 @@ poetry run python agents/doctor.py
 ```
 
 2. **Note Doctor Agent Address** from console output:
-```
+
 INFO: [DrSmith]: Agent address: agent1qdfdx6952trs028fxyug7elgcktam9f896ays6u9art4uaf75hwy2j9m87w
-```
+
 
 3. **Update Patient Agent**:
-```python
+
 # In agents/patient.py
 DOCTOR_ADDRESS = "agent1qdfdx6952trs028fxyug7elgcktam9f896ays6u9art4uaf75hwy2j9m87w"
-```
+
 
 4. **Start Patient Agent** (in terminal 2):
 ```bash
@@ -72,19 +72,17 @@ poetry run python agents/patient.py
 ## Expected Output
 
 **Doctor Agent Logs:**
-```
 INFO: [DrSmith]: Received appointment request from PatientAlice
 INFO: [DrSmith]: Checking availability for 2023-10-01 10:00:00+00:00
 INFO: [DrSmith]: Availability confirmed - sending response
 INFO: [DrSmith]: Received booking confirmation - updating schedule
-```
+
 
 **Patient Agent Logs:**
-```
 INFO: [PatientAlice]: Sent appointment request for Cardiology consultation
 INFO: [PatientAlice]: Received availability confirmation from DrSmith
 INFO: [PatientAlice]: Appointment booked successfully for 2023-10-01 10:00:00+00:00
-```
+
 
 ## Key Components
 
@@ -136,4 +134,3 @@ MIT License - See [LICENSE](LICENSE) for details
 ---
 
 **Note:** Ensure agents remain online during communication and update doctor addresses when restarting agents. For production use, implement additional security measures and proper error handling.
-```
