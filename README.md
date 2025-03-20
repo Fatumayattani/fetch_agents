@@ -7,9 +7,9 @@ This repository contains three smart AI agents, each serving a unique purpose:
 
 | 🤖 Agent Name          | 🌟 Description | 🔗 Project Link |
 |------------------------|---------------|----------------|
-| 📚 **Smart Tutor** | An AI-powered tutor that provides educational assistance to students in various subjects. | [Smart Tutor](https://github.com/Fatumayattani/fetch_agents/tree/main/smart_tutor/) |
-| 🏥 **Doctor Appointment** | A medical assistant bot that helps patients book appointments with specialized doctors. | [Doctor Appointment](https://github.com/Fatumayattani/fetch_agents/tree/main/doctor_appointment/) |
-| 🌙 **Dream Interpreter** | A dream analysis bot that interprets users' dreams based on symbolic meanings. | [Dream Interpreter](https://github.com/Fatumayattani/fetch_agents/tree/main/dream/) |
+| 📚 **Smart Tutor** | An AI tutor agent that provides educational assistance to students in various subjects. | [Smart Tutor](https://github.com/Fatumayattani/fetch_agents/tree/main/smart_tutor/) |
+| 🏥 **Doctor Appointment** | A medical assistant agent that helps patients book appointments with specialized doctors. | [Doctor Appointment](https://github.com/Fatumayattani/fetch_agents/tree/main/doctor_appointment/) |
+| 🌙 **Dream Interpreter** | A dream analysis agent that interprets users' dreams. | [Dream Interpreter](https://github.com/Fatumayattani/fetch_agents/tree/main/dream/) |
 
 ---
 
