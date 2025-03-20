@@ -84,7 +84,6 @@ INFO: [DrSmith]: Received booking confirmation - updating schedule
 INFO: [PatientAlice]: Sent appointment request for Cardiology consultation
 INFO: [PatientAlice]: Received availability confirmation from DrSmith
 INFO: [PatientAlice]: Appointment booked successfully for 2023-10-01 10:00:00+00:00
-INFO: [PatientAlice]: Consultation fee: $150.00
 ```
 
 ## Key Components
