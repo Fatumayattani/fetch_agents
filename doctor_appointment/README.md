@@ -1,4 +1,4 @@
-# Doctor Appointment System with Autonomous Agents
+# 🚑 Doctor Appointment System with uAgents
 
 A decentralized doctor appointment system built using the uAgents framework (Fetch.AI), enabling seamless communication between patient and doctor agents for appointment management.
 
