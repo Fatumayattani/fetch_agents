@@ -30,7 +30,7 @@ This repository contains three smart AI agents, each serving a unique purpose:
    ```
 4. **Run an Agent** ⚡  
    ```sh
-   python -m agents.patient  # Example: Running the Doctor Appointment Agent
+   python tutor.py  # Example: Running Tutor Agent
    ```
 
 ---
@@ -58,16 +58,7 @@ We 💖 open-source! Anyone is free to contribute to this repository. Whether it
 
 ## 🌍 Connect with Me  
 
-💼 GitHub: [Fatumayattani](https://github.com/Fatumayattani)  
+💼 Twitter/X: [@fatumayattani](https://x.com/fatumayattani)  
 ✉️ Email: fyattani@gmail.com  
 
 🚀 Let's build the future of AI-powered agents together!  
-```
-
-This **README** includes:  
-✅ A fun and engaging tone with **emojis** ✨  
-✅ A **table** linking to all three agents 📌  
-✅ **Installation** and **setup instructions** 🛠️  
-✅ **Contribution guidelines** for open-source collaboration 🤝  
-
-Let me know if you'd like any modifications! 🚀🔥
