@@ -1,5 +1,5 @@
 # 🎓 Smart Tutor
-his project demonstrates how to create two AI agents that communicate using **Fetch.ai's uAgents framework**. The agents work together
+This project demonstrates how to create two AI agents that communicate using **Fetch.ai's uAgents framework**. The agents work together
 Smart Tutor is an AI-powered tutoring system that enables seamless communication between a student and a tutor agent. The tutor fetches answers using Google's Gemini AI API and provides intelligent responses to student queries.
 
 ## 🚀 Features
