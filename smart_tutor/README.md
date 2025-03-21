@@ -3,10 +3,9 @@ his project demonstrates how to create two AI agents that communicate using **Fe
 Smart Tutor is an AI-powered tutoring system that enables seamless communication between a student and a tutor agent. The tutor fetches answers using Google's Gemini AI API and provides intelligent responses to student queries.
 
 ## 🚀 Features
-- 🤖 AI-powered tutor using Gemini API
 - 📡 Decentralized agent communication
+- 🤖 AI-powered tutor using Gemini API
 - 🔄 Real-time Q&A system
-- 🔗 Runs locally with simple setup
 
 ## 🛠️ Installation
 ### 1️⃣ Clone the Repository
