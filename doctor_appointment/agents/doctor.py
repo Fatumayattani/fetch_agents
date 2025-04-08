@@ -1,3 +1,6 @@
+import sys
+import os
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 from uagents import Agent, Context
 from tortoise import Tortoise
 from protocols.doctor import doctor_proto, SpecializationModel, Doctor, Availability

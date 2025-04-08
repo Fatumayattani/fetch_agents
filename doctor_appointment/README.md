@@ -55,7 +55,7 @@ poetry run python agents/doctor.py
 
 2. **Note Doctor Agent Address** from console output:
 
-INFO: [DrSmith]: Agent address: agent1qdfdx6952trs028fxyug7elgcktam9f896ays6u9art4uaf75hwy2j9m87w
+![Doctor Appointment System](assets/doc1.png)
 
 
 3. **Update Patient Agent**:
