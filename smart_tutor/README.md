@@ -55,6 +55,9 @@ The tutor fetches answers using Google's Gemini AI API and provides intelligent 
 
 ![student output ](assets/student4.png)
 
+Real-time interaction logs showcasing seamless communication between Student and Tutor agents on Agentverse
+ 
+ ![student output ](assets/image11.png)
 
 
 

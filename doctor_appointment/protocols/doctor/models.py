@@ -1,33 +1,16 @@
-from enum import IntEnum
-from tortoise import fields, models
+from uagents import Model
+from datetime import datetime, timedelta
+from typing import List
 
-class Specialization(IntEnum):
-    GENERAL = 1
-    CARDIOLOGY = 2
-    DERMATOLOGY = 3
-    NEUROLOGY = 4
+class Doctor(Model):
+    name: str  # Name of the doctor
+    specializations: List[int]  # List of specializations (e.g., 1 for cardiology, 2 for pediatrics)
 
-class Patient(models.Model):
-    id = fields.IntField(pk=True)
-    name = fields.CharField(max_length=64)
-    address = fields.CharField(max_length=100)
-    created_at = fields.DatetimeField(auto_now_add=True)
+class Availability(Model):
+    doctor: Doctor  # Link to the Doctor model
+    time_start: datetime  # Start of the availability period
+    time_end: datetime  # End of the availability period
 
-class SpecializationModel(models.Model):
-    id = fields.IntField(pk=True)
-    type = fields.IntEnumField(Specialization)
-
-class Doctor(models.Model):
-    id = fields.IntField(pk=True)
-    name = fields.CharField(max_length=64)
-    location = fields.CharField(max_length=64)
-    created_at = fields.DatetimeField(auto_now_add=True)
-    availability = fields.ReverseRelation["Availability"]
-    specializations = fields.ManyToManyField("models.SpecializationModel")
-    consultation_fee = fields.FloatField(default=100.0)
-
-class Availability(models.Model):
-    id = fields.IntField(pk=True)
-    doctor = fields.OneToOneField("models.Doctor", related_name="availability")
-    time_start = fields.DatetimeField()
-    time_end = fields.DatetimeField()
+class SpecializationModel(Model):
+    type: int  # Type of specialization (e.g., 1 for cardiology, 2 for pediatrics)
+    description: str  # Description of the specialization

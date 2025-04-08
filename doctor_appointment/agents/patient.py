@@ -1,63 +1,49 @@
-import sys
-import os
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
-
-from uagents import Agent, Context
-from protocols.doctor import (
-    AppointmentRequest,
-    AppointmentConfirmation,
-    AppointmentResponse,
-    ConfirmationResponse,
-)
 from datetime import datetime, timedelta
-from pytz import utc
-from protocols.doctor.models import Specialization
+from uagents import Agent, Context
+from protocols.doctor import doctor_proto  # Make sure doctor_proto is imported
+from protocols.doctor.messages import AppointmentRequest, AppointmentResponse, AppointmentConfirmation, ConfirmationResponse # type: ignore
 
-# Replace with the actual address printed by the doctor agent when you run it
-DOCTOR_ADDRESS = "agent1qw04ejpzg8v3pyg9t7hsxryhmt9vruvwndwyzplaag6cpq6hmshg29qr5wr"
+# Make sure the protocol is included
+doctor_proto.include()  # Register the protocol
 
-patient = Agent(
-    name="PatientAlice",
-    port=8000,
-    seed="patient secret phrase",
-    endpoint=["http://127.0.0.1:8000/submit"],
-)
+class PatientAgent(Agent):
+    def __init__(self, name: str):
+        super().__init__(name)
+        self.name = name
 
-# Appointment request data
-req = AppointmentRequest(
-    patient="PatientAlice",
-    preferred_time=utc.localize(datetime(2023, 10, 1, 10, 0)),
-    duration=timedelta(hours=1),
-    required_specialization=Specialization.CARDIOLOGY.value,
-    patient_info="Chest pain",
-)
-
-@patient.on_interval(period=5.0)
-async def send_request(ctx: Context):
-    if not ctx.storage.get("confirmed"):
-        await ctx.send(DOCTOR_ADDRESS, req)
-        ctx.logger.info("Sent appointment request")
-
-@patient.on_message(model=AppointmentResponse)
-async def handle_response(ctx: Context, sender: str, msg: AppointmentResponse):
-    if msg.accept:
-        confirm = AppointmentConfirmation(
-            patient_name=req.patient,
-            appointment_time=msg.proposed_time,
-            duration=req.duration,
-            doctor_name=msg.doctor_name,
-            fee=msg.fee
+    async def send_appointment_request(self, doctor_name: str, preferred_time: datetime, duration: timedelta, specialization: int):
+        request = AppointmentRequest(
+            patient=self.name,
+            preferred_time=preferred_time,
+            duration=duration,
+            required_specialization=specialization,
+            patient_info="General info about the patient"
         )
-        await ctx.send(sender, confirm)
-        ctx.logger.info("Sent appointment confirmation")
-    else:
-        ctx.logger.info("Appointment request was not accepted")
-        ctx.storage.set("confirmed", True)
+        await self.send(doctor_name, request)
 
-@patient.on_message(model=ConfirmationResponse)
-async def handle_confirm(ctx: Context, _: str, msg: ConfirmationResponse):
-    ctx.logger.info(f"Confirmation received: {msg.message}")
-    ctx.storage.set("confirmed", True)
+    @doctor_proto.on_message(model=AppointmentResponse, replies=AppointmentConfirmation)
+    async def handle_appointment_response(self, ctx: Context, sender: str, msg: AppointmentResponse):
+        if msg.accept:
+            print(f"Doctor {msg.doctor_name} accepted the appointment!")
+            # Send confirmation back to doctor
+            confirmation = AppointmentConfirmation(
+                patient_name=self.name,
+                appointment_time=msg.proposed_time,
+                duration=timedelta(hours=1),  # Example duration
+                doctor_name=msg.doctor_name,
+                fee=msg.fee
+            )
+            await self.send(sender, confirmation)
+        else:
+            print("Doctor rejected the appointment!")
+
+    @doctor_proto.on_message(model=ConfirmationResponse, replies=None)
+    async def handle_confirmation_response(self, ctx: Context, sender: str, msg: ConfirmationResponse):
+        if msg.success:
+            print(f"Appointment confirmed! Doctor: {sender}, Message: {msg.message}")
+        else:
+            print(f"Appointment failed. Reason: {msg.message}")
 
 if __name__ == "__main__":
-    patient.run()
+    patient_agent = PatientAgent(name="JohnDoe")  # The Patient agent's name
+    patient_agent.run()

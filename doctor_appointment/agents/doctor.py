@@ -1,80 +1,72 @@
 import sys
 import os
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
+
+# Add the parent directory of 'protocols' to sys.path so it can be found
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "../..")))
+
+# Now you should be able to import the protocol from the correct path
+from protocols.doctor import doctor_proto
+from protocols.doctor.messages import AppointmentRequest, AppointmentResponse, AppointmentConfirmation, ConfirmationResponse # type: ignore
+from protocols.doctor.models import Doctor, Availability
 
 from uagents import Agent, Context
-from tortoise import Tortoise
-from protocols.doctor import (
-    SpecializationModel,
-    Doctor,
-    Availability,
-    AppointmentRequest,
-    AppointmentResponse,
-    AppointmentConfirmation,
-    ConfirmationResponse
-)
-from datetime import datetime
-from pytz import utc
 
-# Define the doctor agent
-doctor = Agent(
-    name="DrSmith",
-    port=8001,
-    seed="doctor secret phrase",
-    endpoint=["http://127.0.0.1:8001/submit"],
-)
+# Register the protocol
+doctor_proto.include()
 
-# NOTE: Removed doctor.include(doctor_proto) to avoid duplicate model registration
+class DoctorAgent(Agent):
+    def __init__(self, name: str):
+        super().__init__(name)
+        self.name = name
 
-# Initialize the database and populate doctor data on startup
-@doctor.on_event("startup")
-async def init_db(ctx: Context):
-    await Tortoise.init(
-        db_url="sqlite://db.sqlite3",
-        modules={"models": ["protocols.doctor.models"]}
-    )
-    await Tortoise.generate_schemas()
+    @doctor_proto.on_message(model=AppointmentRequest, replies=AppointmentResponse)
+    async def handle_appointment_request(self, ctx: Context, sender: str, msg: AppointmentRequest):
+        doctor = await Doctor.filter(name=self.name).first()
+        if not doctor:
+            await ctx.send(sender, AppointmentResponse(accept=False))
+            return
 
-    # Create doctor and availability
-    doc = await Doctor.create(name=doctor.name, location="City Hospital")
-    spec = await SpecializationModel.create(type=2)  # Cardiology
-    await doc.specializations.add(spec)
+        availability = await Availability.filter(doctor=doctor).first()
+        if not availability:
+            await ctx.send(sender, AppointmentResponse(accept=False))
+            return
 
-    await Availability.create(
-        doctor=doc,
-        time_start=utc.localize(datetime(2023, 10, 1, 9, 0)),
-        time_end=utc.localize(datetime(2023, 10, 1, 17, 0))
-    )
+        if msg.required_specialization not in [spec.type for spec in await doctor.specializations.all()]:
+            await ctx.send(sender, AppointmentResponse(accept=False))
+            return
 
-# Handle incoming appointment request
-@doctor.on_message(model=AppointmentRequest)
-async def handle_appointment_request(ctx: Context, sender: str, msg: AppointmentRequest):
-    ctx.logger.info(f"Received appointment request from {msg.patient}")
+        if (msg.preferred_time >= availability.time_start and
+            (msg.preferred_time + msg.duration) <= availability.time_end):
+            
+            fee = 2000 * (msg.duration.total_seconds() / 3600)
+            
+            await ctx.send(sender, AppointmentResponse(
+                accept=True,
+                proposed_time=msg.preferred_time,
+                doctor_name=self.name,
+                fee=fee
+            ))
+        else:
+            await ctx.send(sender, AppointmentResponse(accept=False))
 
-    proposed_time = msg.preferred_time
+    @doctor_proto.on_message(model=AppointmentConfirmation, replies=ConfirmationResponse)
+    async def handle_appointment_confirmation(self, ctx: Context, sender: str, msg: AppointmentConfirmation):
+        doctor = await Doctor.filter(name=msg.doctor_name).first()
+        availability = await Availability.filter(doctor=doctor).first()
 
-    response = AppointmentResponse(
-        doctor_name=doctor.name,
-        proposed_time=proposed_time,
-        fee=2000,
-        accept=True
-    )
-    await ctx.send(sender, response)
-    ctx.logger.info("Sent appointment response to patient")
+        if not doctor or not availability:
+            await ctx.send(sender, ConfirmationResponse(success=False, message="Doctor or availability not found"))
+            return
 
-# Handle confirmation from patient
-@doctor.on_message(model=AppointmentConfirmation)
-async def handle_confirmation(ctx: Context, sender: str, msg: AppointmentConfirmation):
-    ctx.logger.info(f"Appointment confirmed by {msg.patient_name} at {msg.appointment_time}")
+        if (msg.appointment_time >= availability.time_start and
+            (msg.appointment_time + msg.duration) <= availability.time_end):
+            availability.time_start = msg.appointment_time + msg.duration
+            await availability.save()
 
-    response = ConfirmationResponse(message="Appointment confirmed. See you soon!")
-    await ctx.send(sender, response)
-    ctx.logger.info("Sent confirmation response to patient")
-
-# Close DB on shutdown
-@doctor.on_event("shutdown")
-async def close_db(ctx: Context):
-    await Tortoise.close_connections()
+            await ctx.send(sender, ConfirmationResponse(success=True, message="Appointment booked successfully"))
+        else:
+            await ctx.send(sender, ConfirmationResponse(success=False, message="Time unavailable"))
 
 if __name__ == "__main__":
-    doctor.run()
+    doctor_agent = DoctorAgent(name="DrSmith")  # The Doctor agent's name
+    doctor_agent.run()
