@@ -61,7 +61,7 @@ poetry run python agents/doctor.py
 3. **Update Patient Agent**:
 
 # In agents/patient.py
-DOCTOR_ADDRESS = "agent1qdfdx6952trs028fxyug7elgcktam9f896ays6u9art4uaf75hwy2j9m87w"
+DOCTOR_ADDRESS = "agent1qw04ejpzg8v3pyg9t7hsxryhmt9vruvwndwyzplaag6cpq6hmshg29qr5wr"
 
 
 4. **Start Patient Agent** (in terminal 2):
@@ -70,6 +70,8 @@ poetry run python agents/patient.py
 ```
 
 ## Expected Output
+
+![Doctor Appointment System](assets/patient1.png)
 
 **Doctor Agent Logs:**
 INFO: [DrSmith]: Received appointment request from PatientAlice

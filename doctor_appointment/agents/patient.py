@@ -1,15 +1,19 @@
+import sys
+import os
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
+
 from uagents import Agent, Context
 from protocols.doctor import (
     AppointmentRequest,
     AppointmentConfirmation,
-    AppointmentResponse,  
+    AppointmentResponse,
     ConfirmationResponse,
 )
 from datetime import datetime, timedelta
 from pytz import utc
 from protocols.doctor.models import Specialization
 
-
+# Replace with the actual address printed by the doctor agent when you run it
 DOCTOR_ADDRESS = "agent1qw04ejpzg8v3pyg9t7hsxryhmt9vruvwndwyzplaag6cpq6hmshg29qr5wr"
 
 patient = Agent(
@@ -19,6 +23,7 @@ patient = Agent(
     endpoint=["http://127.0.0.1:8000/submit"],
 )
 
+# Appointment request data
 req = AppointmentRequest(
     patient="PatientAlice",
     preferred_time=utc.localize(datetime(2023, 10, 1, 10, 0)),
