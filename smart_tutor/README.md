@@ -73,6 +73,10 @@ Both agents are running simultaneously for proper communication. ✅
 2. The **Tutor Agent** receives the question and fetches an answer using the Gemini API.
 3. The **Tutor Agent** sends the response back to the Student Agent.
 
+For more detailed insights into creating AI agents with Fetch.ai uAgents, check out my blog article:
+
+[Creating AI Agents with Fetch.ai uAgents](https://medium.com/@fyattani/creating-ai-agents-with-fetch-ai-uagents-06b3a3859d5c)
+
 ## 📬 Contact
 ✉️ Email me at: [fyattani@gmail.com](mailto:fyattani@gmail.com)
 
