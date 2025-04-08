@@ -74,5 +74,6 @@ Both agents are running simultaneously for proper communication. ✅
 3. The **Tutor Agent** sends the response back to the Student Agent.
 
 ## 📬 Contact
+✉️ Email me at: [fyattani@gmail.com](mailto:fyattani@gmail.com)
 💬 Connect with me on **X (Twitter):** [@fatumayattani](https://twitter.com/fatumayattani)
 
